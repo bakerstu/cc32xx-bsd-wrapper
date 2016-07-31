@@ -31,3 +31,10 @@
 # Debug files
 *.dSYM/
 *.su
+
+# Editor artifacts
+*.swp
+*~
+
+# Build artifacts
+*.d
