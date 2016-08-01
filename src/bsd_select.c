@@ -31,9 +31,12 @@
  * @date 31 July 2016
  */
 
+#if !defined(__TI_COMPILER_VERSION__)
 #include <sys/time.h>
 #include <sys/types.h>
+#endif
 #include <sys/select.h>
+#include <sys/socket.h>
 #include <errno.h>
 
 #include "socket.h"

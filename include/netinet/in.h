@@ -78,13 +78,13 @@ struct sockaddr_in
 #define IPPROTO_RAW (255)
 
 /// Converts a network endian long value to host endian.
-#define ntohl(x)   sl_Ntohl
+#define ntohl(x)   sl_Ntohl(x)
 /// Converts a network endian short value to host endian.
-#define ntohs(x)   sl_Ntohs
+#define ntohs(x)   sl_Ntohs(x)
 /// Converts a host endian long value to network endian.
-#define htonl(x)   sl_Htonl
+#define htonl(x)   sl_Htonl(x)
 /// Converts a host endian short value to network endian.
-#define htons(x)   sl_Htons
+#define htons(x)   sl_Htons(x)
 
 #ifdef __cplusplus
 }

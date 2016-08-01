@@ -34,11 +34,86 @@
 #ifndef _SYS_SOCKET_H_
 #define _SYS_SOCKET_H_
 
+#if !defined(__TI_COMPILER_VERSION__)
 #include <sys/types.h>
+#endif
+#include <stdlib.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#if defined(__TI_COMPILER_VERSION__)
+#ifndef EAGAIN
+#define EAGAIN           11
+#endif
+#ifndef ENOMEM
+#define ENOMEM           12
+#endif
+#ifndef EACCES
+#define EACCES           13
+#endif
+#ifndef EINVAL
+#define EINVAL           22
+#endif
+#ifndef EMFILE
+#define EMFILE           24
+#endif
+#ifndef EPROTOTYPE
+#define EPROTOTYPE       91
+#endif
+#ifndef EPROTONOSUPPORT
+#define EPROTONOSUPPORT  93
+#endif
+#ifndef EOPNOTSUPP
+#define EOPNOTSUPP       95
+#endif
+#ifndef EAFNOSUPPORT
+#define EAFNOSUPPORT     97
+#endif
+#ifndef EALREADY
+#define EALREADY         114
+#endif
+#ifndef SL_ENSOCK
+#define SL_ENSOCK           SL_ERROR_BSD_ENSOCK
+#endif
+#ifndef SL_EAGAIN
+#define SL_EAGAIN           SL_ERROR_BSD_EAGAIN
+#endif
+#ifndef SL_ENOMEM
+#define SL_ENOMEM           SL_ERROR_BSD_ENOMEM
+#endif
+#ifndef SL_EACCES
+#define SL_EACCES           SL_ERROR_BSD_EACCES
+#endif
+#ifndef SL_EINVAL
+#define SL_EINVAL           SL_ERROR_BSD_EINVAL
+#endif
+//#ifndef EMFILE
+//#define EMFILE              SL_ERROR_BSD_EAGAIN
+//#endif
+#ifndef SL_EPROTOTYPE
+#define SL_EPROTOTYPE       SL_ERROR_BSD_EPROTOTYPE
+#endif
+#ifndef SL_EPROTONOSUPPORT
+#define SL_EPROTONOSUPPORT  SL_ERROR_BSD_EPROTONOSUPPORT
+#endif
+#ifndef SL_EOPNOTSUPP
+#define SL_EOPNOTSUPP       SL_ERROR_BSD_EOPNOTSUPP
+#endif
+#ifndef SL_EAFNOSUPPORT
+#define SL_EAFNOSUPPORT     SL_ERROR_BSD_EAFNOSUPPORT
+#endif
+#ifndef SL_EALREADY
+#define SL_EALREADY         SL_ERROR_BSD_EALREADY
+#endif
+
+struct timeval
+{
+    uint32_t tv_sec;
+    uint32_t tv_usec;
+};
 #endif
 
 /** TCP Socket */

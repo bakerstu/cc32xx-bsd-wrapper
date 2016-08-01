@@ -48,8 +48,8 @@ extern "C" {
 #include "cc_pal.h"
 
 /* static installation of the provisioning extarnal library*/
-#include "provisioning_api.h"
-#define SL_EXT_LIB_1		sl_Provisioning
+//#include "provisioning_api.h"
+//#define SL_EXT_LIB_1		sl_Provisioning
 
 /*!
 	\def		MAX_CONCURRENT_ACTIONS
