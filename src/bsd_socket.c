@@ -138,13 +138,13 @@ int socket(int domain, int type, int protocol)
 /*
  * ::bind()
  */
-int bind(int socket, const struct sockaddr *address, socklen_t address_len)
+int bind(int s, const struct sockaddr *address, socklen_t address_len)
 {
     SlSockAddr_t sl_address;
     sl_address.sa_family = address->sa_family;
     memcpy(sl_address.sa_data, address->sa_data, sizeof(sl_address.sa_data));
 
-    int result = sl_Bind(socket, &sl_address, address_len);
+    int result = sl_Bind(s, &sl_address, address_len);
 
     if (result < 0)
     {
@@ -165,9 +165,9 @@ int bind(int socket, const struct sockaddr *address, socklen_t address_len)
 /*
  * ::listen()
  */
-int listen(int socket, int backlog)
+int listen(int s, int backlog)
 {
-    int result = sl_Listen(socket, backlog);
+    int result = sl_Listen(s, backlog);
 
     if (result < 0)
     {
@@ -186,12 +186,12 @@ int listen(int socket, int backlog)
 /*
  * ::accept()
  */
-int accept(int socket, struct sockaddr *address, socklen_t *address_len)
+int accept(int s, struct sockaddr *address, socklen_t *address_len)
 {
     SlSockAddr_t sl_address;
     SlSocklen_t sl_address_len;
 
-    int result = sl_Accept(socket, &sl_address, &sl_address_len);
+    int result = sl_Accept(s, &sl_address, &sl_address_len);
 
     if (address && address_len)
     {
@@ -221,13 +221,13 @@ int accept(int socket, struct sockaddr *address, socklen_t *address_len)
 /*
  * ::connect()
  */
-int connect(int socket, const struct sockaddr *address, socklen_t address_len)
+int connect(int s, const struct sockaddr *address, socklen_t address_len)
 {
     SlSockAddr_t sl_address;
     sl_address.sa_family = address->sa_family;
     memcpy(sl_address.sa_data, address->sa_data, sizeof(sl_address.sa_data));
 
-    int result = sl_Connect(socket, &sl_address, address_len);
+    int result = sl_Connect(s, &sl_address, address_len);
 
     if (result < 0)
     {
@@ -257,9 +257,9 @@ int connect(int socket, const struct sockaddr *address, socklen_t address_len)
 /*
  * ::recv()
  */
-int recv(int socket, void *buffer, size_t length, int flags)
+int recv(int s, void *buffer, size_t length, int flags)
 {
-    int result = sl_Recv(socket, buffer, length, flags);
+    int result = sl_Recv(s, buffer, length, flags);
 
     if (result < 0)
     {
@@ -284,9 +284,9 @@ int recv(int socket, void *buffer, size_t length, int flags)
 /*
  * ::send()
  */
-int send(int socket, const void *buffer, size_t length, int flags)
+int send(int s, const void *buffer, size_t length, int flags)
 {
-    int result = sl_Send(socket, buffer, length, flags);
+    int result = sl_Send(s, buffer, length, flags);
 
     if (result < 0)
     {
@@ -304,7 +304,7 @@ int send(int socket, const void *buffer, size_t length, int flags)
 /*
  * ::setsocketopt()
  */
-int setsockopt(int socket, int level, int option_name,
+int setsockopt(int s, int level, int option_name,
                const void *option_value, socklen_t option_len)
 {
     int result;
@@ -361,10 +361,10 @@ int setsockopt(int socket, int level, int option_name,
 #if defined(__TI_COMPILER_VERSION__)
 int close(int fd)
 #else
-int _close_r(struct _reent *reent, int fd)
+int _close_r(struct _reent *reent, int s)
 #endif
 {
-    int result = sl_Close(fd);
+    int result = sl_Close(s);
 
     if (result < 0)
     {
