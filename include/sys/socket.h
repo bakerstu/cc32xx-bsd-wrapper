@@ -166,7 +166,7 @@ typedef uint32_t socklen_t;
 int socket(int domain, int type, int protocol);
 
 /** Bind a name to a socket.
- * @param socket file descriptor of the socket to be bound
+ * @param s file descriptor of the socket to be bound
  * @param address points to a sockaddr structure containing the address to
  *                be bound to the socket
  * @param address_len specifies the length of the sockaddr structure pointed
@@ -174,21 +174,21 @@ int socket(int domain, int type, int protocol);
  * @return shall return on success, otherwise, -1 shall be returned and
  *         errno set to indicate the error
  */
-int bind(int socket, const struct sockaddr *address, socklen_t address_len);
+int bind(int s, const struct sockaddr *address, socklen_t address_len);
 
 /** Mark a connection-mode socket, specified by the socket argument, as
  * accepting connections.
- * @param socket the socket file descriptor
+ * @param s the socket file descriptor
  * @param backlog provides a hint to the implementation which the
  *                implementation shall use to limit the number of
  *                outstanding connections in the socket's listen queue
  * @return shall return 0 upon success, otherwise, -1 shall be returned and
  *         errno set to indicate the error
  */
-int listen(int socket, int backlog);
+int listen(int s, int backlog);
 
 /** Accept a new connection on a socket.
- * @param socket the socket file descriptor
+ * @param s the socket file descriptor
  * @param address either a null pointer, or a pointer to a sockaddr
  *                structure where the address of the connecting socket
  *                shall be returned
@@ -201,20 +201,20 @@ int listen(int socket, int backlog);
  *         socket upon success, otherwise, -1 shall be returned and errno
  *         set to indicate the error
  */
-int accept(int socket, struct sockaddr *address, socklen_t *address_len);
+int accept(int s, struct sockaddr *address, socklen_t *address_len);
 
 /** Connect a socket.
- * @param socket the socket file descriptor
+ * @param s the socket file descriptor
  * @param address points to a sockaddr structure containing the peer address
  * @param address_len specifies the length of the sockaddr structure pointed
  *                    to by the address argument
  * @return shall return 0 upon success, otherwise, -1 shall be returned and
  *         errno set to indicate the error
  */
-int connect(int socket, const struct sockaddr *address, socklen_t address_len);
+int connect(int s, const struct sockaddr *address, socklen_t address_len);
 
 /** Receive a message from a connection-mode or connectionless-mode socket.
- * @param socket the socket file descriptor
+ * @param s the socket file descriptor
  * @param buffer buffer where the message should be stored
  * @param length length in bytes of the buffer pointed to by the buffer
  *               argument
@@ -224,20 +224,20 @@ int connect(int socket, const struct sockaddr *address, socklen_t address_len);
  *         recv() shall return 0. Otherwise, -1 shall be returned and errno
  *         set to indicate the error
  */
-int recv(int socket, void *buffer, size_t length, int flags);
+int recv(int s, void *buffer, size_t length, int flags);
 
 /** Initiate transmission of a message from the specified socket.
- * @param socket the socket file descriptor
+ * @param s the socket file descriptor
  * @param buffer buffer containing the message to send
  * @param length length of the message in bytes
  * @param flags the type of message transmission
  * @return the number of bytes sent, otherwise, -1 shall be returned and
  *         errno set to indicate the error
  */
-int send(int socket, const void *buffer, size_t length, int flags);
+int send(int s, const void *buffer, size_t length, int flags);
 
 /** Set the socket options.
- * @param socket the socket file descriptor
+ * @param s the socket file descriptor
  * @param level specifies the protocol level at which the option resides
  * @param option_name specifies a single option to set
  * @param option_value the metadata that belongs to the option_name
@@ -246,8 +246,17 @@ int send(int socket, const void *buffer, size_t length, int flags);
  * @return shall return 0 upon success, otherwise, -1 shall be returned and
  *         errno set to indicate the error
  */
-int setsockopt(int socket, int level, int option_name,
+int setsockopt(int s, int level, int option_name,
                const void *option_value, socklen_t option_len);
+
+#if defined(__TI_COMPILER_VERSION__)
+/** Close a socket.
+ * @param s socket to close
+ * @return shall return 0 upon success, otherwise, -1 shall be returned and
+ *         errno set to indicate the error
+ */
+int close(int s);
+#endif
 
 #ifdef __cplusplus
 }

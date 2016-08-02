@@ -355,3 +355,27 @@ int setsockopt(int socket, int level, int option_name,
     return result;
 }
 
+/*
+ * ::close() or ::_close_r() for newlib
+ */
+#if defined(__TI_COMPILER_VERSION__)
+int close(int fd)
+#else
+int _close_r(struct _reent *reent, int fd)
+#endif
+{
+    int result = sl_Close(fd);
+
+    if (result < 0)
+    {
+        switch (result)
+        {
+            default:
+                errno = EBADF;
+                break;
+        }
+        return -1;
+    }
+
+    return 0;
+}
