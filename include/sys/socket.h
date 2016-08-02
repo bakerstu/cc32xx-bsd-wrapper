@@ -45,6 +45,9 @@ extern "C" {
 #endif
 
 #if defined(__TI_COMPILER_VERSION__)
+#ifndef EBADF
+#define EBADF             9
+#endif
 #ifndef EAGAIN
 #define EAGAIN           11
 #endif
@@ -73,7 +76,7 @@ extern "C" {
 #define EAFNOSUPPORT     97
 #endif
 #ifndef EALREADY
-#define EALREADY         114
+#define EALREADY        114
 #endif
 #ifndef SL_ENSOCK
 #define SL_ENSOCK           SL_ERROR_BSD_ENSOCK
