@@ -40,6 +40,35 @@
 extern "C" {
 #endif
 
+/** contains host resolution errors */
+extern int h_errno;
+
+/** Structor to contain info about a host resolution.
+ */
+struct hostent
+{
+    char  *h_name;      /**< Official name of host */
+    char **h_aliases;   /**< Alias list */
+    int    h_addrtype;  /**< Host address type */
+    int    h_length;    /**< Length of address */
+    char **h_addr_list; /**< List of addresses */
+};
+
+/** Resolve a host by its name or IPv4 address (in standard dot notation) or
+ * an IPv6 (in standard colon notation).
+ * This is not multi-thread safe as implemented or by BSD convention.  Please
+ * use @ref getaddrinfo() for a thread safe alternative.
+ * @param name hostname to resolve
+ * @return pointer to the host name credentials on success, else NULL on error
+ */
+struct hostent *gethostbyname(const char *name);
+
+#define HOST_NOT_FOUND 1
+#define TRY_AGAIN      2
+#define NO_RECOVERY    3
+#define NO_DATA        4
+#define NO_ADDRESS     NO_DATA
+
 /** Structure to contain information about address of a service provider.
  */
 struct addrinfo

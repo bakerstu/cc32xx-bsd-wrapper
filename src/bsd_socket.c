@@ -40,6 +40,8 @@
 
 #include "socket.h"
 
+int h_errno;
+
 /*
  * ::socket()
  */
@@ -379,6 +381,56 @@ int _close_r(struct _reent *reent, int s)
     }
 
     return 0;
+}
+
+/*
+ * ::gethostbyname()
+ */
+struct hostent *gethostbyname(const char *name)
+{
+    static struct hostent he;
+    static struct in_addr ia;
+    static struct in_addr *ia_list[2];
+    static char *alias_list[1];
+    uint32_t ip;
+
+    int result = sl_NetAppDnsGetHostByName((int8_t*)name, strlen(name), &ip,
+                                           SL_AF_INET);
+
+    if (result < 0)
+    {
+        switch (result)
+        {
+            default:
+                h_errno = NO_RECOVERY;
+                break;
+            case SL_NET_APP_DNS_MALFORMED_PACKET:
+            case SL_NET_APP_DNS_MISMATCHED_RESPONSE:
+            case SL_POOL_IS_EMPTY:
+                h_errno = TRY_AGAIN;
+                break;
+            case SL_NET_APP_DNS_QUERY_NO_RESPONSE:
+            case SL_NET_APP_DNS_NO_SERVER:
+            case SL_NET_APP_DNS_QUERY_FAILED:
+                h_errno = HOST_NOT_FOUND;
+                break;
+        }
+        return NULL;
+    }
+
+    alias_list[0] = NULL;
+
+    ia.s_addr = ip;
+    ia_list[0] = &ia;
+    ia_list[1] = NULL;
+
+    he.h_name = (char*)name;
+    he.h_aliases = alias_list;
+    he.h_addrtype = AF_INET;
+    he.h_length = 4;
+    he.h_addr_list = (char**)ia_list;
+
+    return &he;
 }
 
 /*
