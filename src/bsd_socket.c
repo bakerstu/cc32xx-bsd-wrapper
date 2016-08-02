@@ -386,7 +386,17 @@ int _close_r(struct _reent *reent, int s)
  */
 const char *gai_strerror (int ecode)
 {
-    return "gai_strerror unkown";
+    switch (ecode)
+    {
+        default:
+            return "gai_strerror unkown";
+        case EAI_AGAIN:
+            return "temporary failure";
+        case EAI_FAIL:
+            return "non-recoverable failure";
+        case EAI_MEMORY:
+            return "memory allocation failure";
+    }
 }
 
 /*
