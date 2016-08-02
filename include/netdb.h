@@ -76,7 +76,7 @@ int getaddrinfo(const char *nodename, const char *servname,
                 struct addrinfo **res);
 
 # define EAI_AGAIN    -3    /**< Temporary failure in name resolution */
-# define EAI_FAIL     -4    /**<, Non-recoverable failure in name res */
+# define EAI_FAIL     -4    /**< Non-recoverable failure in name res */
 # define EAI_MEMORY   -10   /**< Memory allocation failure */
 
 #ifdef __cplusplus
