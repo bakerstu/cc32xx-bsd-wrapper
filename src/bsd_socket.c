@@ -333,7 +333,9 @@ int recvfrom(int s, void *buffer, size_t length, int flags,
                 result_addr_in.sin_port = sl_addr_in->sin_port;
                 result_addr_in.sin_addr.s_addr = sl_addr_in->sin_addr.s_addr;
 
-                memcpy(src_addr, &result_addr_in, *addrlen);
+                memcpy(src_addr, &result_addr_in,
+                       *addrlen < sizeof(struct sockaddr_in) ?
+                           *addrlen : sizeof(struct sockaddr_in));
                 *addrlen = sizeof(struct sockaddr_in);
                 break;
             }
