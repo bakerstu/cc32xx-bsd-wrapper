@@ -506,7 +506,7 @@ struct hostent *gethostbyname(const char *name)
     static struct in_addr ia;
     static struct in_addr *ia_list[2];
     static char *alias_list[1];
-    uint32_t ip;
+    unsigned long ip;
 
     int result = sl_NetAppDnsGetHostByName((int8_t*)name, strlen(name), &ip,
                                            SL_AF_INET);
@@ -581,7 +581,7 @@ int getaddrinfo(const char *nodename, const char *servname,
                 const struct addrinfo *hints,
                 struct addrinfo **res)
 {
-    uint32_t ip_addr;
+    unsigned long ip_addr;
     uint8_t domain;
 
     *res = malloc(sizeof(struct addrinfo));
