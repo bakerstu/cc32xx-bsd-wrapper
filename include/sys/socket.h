@@ -239,6 +239,35 @@ int recv(int s, void *buffer, size_t length, int flags);
  */
 int send(int s, const void *buffer, size_t length, int flags);
 
+/** Receive a message from a connection-mode or connectionless-mode socket.
+ * @param s the socket file descriptor
+ * @param buffer buffer where the message should be stored
+ * @param length length in bytes of the buffer pointed to by the buffer
+ *               argument
+ * @param flags Specifies the type of message reception
+ * @param src_addr the credentials of the source address
+ * @param addrlen the size of the source credentials struct
+ * @return the length of the message in bytes, if no messages are available
+ *         to be received and the peer has performed an orderly shutdown,
+ *         recv() shall return 0. Otherwise, -1 shall be returned and errno
+ *         set to indicate the error
+ */
+int recvfrom(int s, void *buffer, size_t length, int flags,
+             struct sockaddr *src_addr, socklen_t *addrlen);
+
+/** Initiate transmission of a message from the specified socket.
+ * @param s the socket file descriptor
+ * @param buffer buffer containing the message to send
+ * @param length length of the message in bytes
+ * @param flags the type of message transmission
+ * @param dest_addr the credentials of the destination address
+ * @param addrlen the size of the destinations credentials struct
+ * @return the number of bytes sent, otherwise, -1 shall be returned and
+ *         errno set to indicate the error
+ */
+int sendto(int s, const void *buffer, size_t length, int flags,
+           const struct sockaddr *dest_addr, socklen_t addrlen);
+
 /** Set the socket options.
  * @param s the socket file descriptor
  * @param level specifies the protocol level at which the option resides

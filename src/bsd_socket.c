@@ -304,6 +304,118 @@ int send(int s, const void *buffer, size_t length, int flags)
 
     return result;  
 }
+
+/*
+ * ::sendto()
+ */
+int recvfrom(int s, void *buffer, size_t length, int flags,
+             struct sockaddr *src_addr, socklen_t *addrlen)
+{
+    SlSockAddr_t sl_sockaddr;
+    SlSocklen_t sl_addrlen;
+
+    int result = sl_RecvFrom(s, buffer, length, flags, &sl_sockaddr,
+                             &sl_addrlen);
+
+    if (src_addr != NULL)
+    {
+        switch (src_addr->sa_family)
+        {
+            default:
+                errno = EAFNOSUPPORT;
+                return -1;
+            case AF_INET:
+            {
+                struct sockaddr_in result_addr_in;
+                SlSockAddrIn_t *sl_addr_in = (SlSockAddrIn_t*)&sl_sockaddr;
+
+                result_addr_in.sin_family = sl_addr_in->sin_family;
+                result_addr_in.sin_port = sl_addr_in->sin_port;
+                result_addr_in.sin_addr.s_addr = sl_addr_in->sin_addr.s_addr;
+
+                memcpy(src_addr, &result_addr_in, *addrlen);
+                *addrlen = sizeof(struct sockaddr_in);
+                break;
+            }
+        }
+    }
+
+    if (result < 0)
+    {
+        switch (result)
+        {
+            default:
+                errno = EINVAL;
+                break;
+            case SL_POOL_IS_EMPTY:
+                usleep(10000);
+                /* fall through */
+            case SL_EAGAIN:
+                errno = EAGAIN;
+                break;
+        }
+        return -1;
+    }
+
+    return result;
+}
+
+/*
+ * ::sendto()
+ */
+int sendto(int s, const void *buffer, size_t length, int flags,
+           const struct sockaddr *dest_addr, socklen_t addrlen)
+{
+    SlSockAddr_t sl_sockaddr;
+    SlSockAddr_t *sl_sockaddr_ptr;
+
+    if (dest_addr != NULL)
+    {
+        switch (dest_addr->sa_family)
+        {
+            default:
+                errno = EAFNOSUPPORT;
+                return -1;
+            case AF_INET:
+            {
+                if (addrlen != sizeof(struct sockaddr_in))
+                {
+                    errno = EINVAL;
+                    return -1;
+                }
+                SlSockAddrIn_t *sl_addr_in = (SlSockAddrIn_t*)&sl_sockaddr;
+                struct sockaddr_in *addr_in = (struct sockaddr_in*)dest_addr;
+                sl_addr_in->sin_family = addr_in->sin_family;
+                sl_addr_in->sin_port = addr_in->sin_port;
+                sl_addr_in->sin_addr.s_addr = addr_in->sin_addr.s_addr;
+                addrlen = sizeof(SlSockAddrIn_t);
+                break;
+            }
+        }
+        sl_sockaddr_ptr = &sl_sockaddr;
+    }
+    else
+    {
+        sl_sockaddr_ptr = NULL;
+        addrlen = 0;
+    }
+
+    int result = sl_SendTo(s, buffer, length, flags, sl_sockaddr_ptr, addrlen);
+
+    if (result < 0)
+    {
+        switch (result)
+        {
+            default:
+                errno = EINVAL;
+                break;
+        }
+        return -1;
+    }
+
+    return result;
+}
+
 /*
  * ::setsocketopt()
  */
