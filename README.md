@@ -17,4 +17,5 @@ There is an example build for the ARM GCC compiler.  Variables are set in path.m
 # Known Limitations
 - select() API is not supported simultaneously from multiple threads
 - secure socket layer is not yet abstracted.  There is not a consistent BSD convention available that makes use of SSL acceleration built into the CC32x network processor.  The thought at the moment is to have a simplified API for setting up SSL sockets that while not compatible with OpenSSL, etc... would minimize the amount of custom logic necessary.
-- IPv6
+- no IPv6 support
+- only AF_INET protocol family supported
