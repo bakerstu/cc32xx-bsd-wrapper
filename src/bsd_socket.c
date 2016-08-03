@@ -476,7 +476,7 @@ int setsockopt(int s, int level, int option_name,
  * ::close() or ::_close_r() for newlib
  */
 #if defined(__TI_COMPILER_VERSION__)
-int close(int fd)
+int close(int s)
 #else
 int _close_r(struct _reent *reent, int s)
 #endif
