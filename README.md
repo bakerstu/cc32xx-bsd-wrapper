@@ -13,3 +13,8 @@ In order for the project to build successfully, we must override the user.h that
 
 # Example GCC build
 There is an example build for the ARM GCC compiler.  Variables are set in path.mk in order to locate the CC3200SDK and the ARM compiler.  To execute the build, update the paths in path.mk to match your setup and type make on the command line in cc32xx-bsd-wrapper/ directory.
+
+# Known Limitations
+- select() API is not supported simultaneously from multiple threads
+- secure socket layer is not yet abstracted.  There is not a consistent BSD convention available that makes use of SSL acceleration built into the CC32x network processor.  The thought at the moment is to have a simplified API for setting up SSL sockets that while not compatible with OpenSSL, etc... would minimize the amount of custom logic necessary.
+- IPv6
