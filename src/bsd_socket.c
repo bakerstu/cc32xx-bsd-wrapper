@@ -144,7 +144,22 @@ int socket(int domain, int type, int protocol)
 int bind(int s, const struct sockaddr *address, socklen_t address_len)
 {
     SlSockAddr_t sl_address;
-    sl_address.sa_family = address->sa_family;
+    switch (address->sa_family)
+    {
+        case AF_INET:
+        	sl_address.sa_family = SL_AF_INET;
+            break;
+        case AF_INET6:
+        	sl_address.sa_family = SL_AF_INET6;
+            break;
+        case AF_PACKET:
+        	sl_address.sa_family = SL_AF_PACKET;
+            break;
+        default:
+            errno = EAFNOSUPPORT;
+            return -1;
+    }
+
     memcpy(sl_address.sa_data, address->sa_data, sizeof(sl_address.sa_data));
 
     int result = sl_Bind(s, &sl_address, address_len);
@@ -312,24 +327,24 @@ int recvfrom(int s, void *buffer, size_t length, int flags,
              struct sockaddr *src_addr, socklen_t *addrlen)
 {
     SlSockAddr_t sl_sockaddr;
-    SlSocklen_t sl_addrlen;
+    SlSocklen_t sl_addrlen = sizeof(SlSocklen_t);
 
     int result = sl_RecvFrom(s, buffer, length, flags, &sl_sockaddr,
                              &sl_addrlen);
 
     if (src_addr != NULL)
     {
-        switch (src_addr->sa_family)
+        switch (sl_sockaddr.sa_family)
         {
             default:
                 errno = EAFNOSUPPORT;
                 return -1;
-            case AF_INET:
+            case SL_AF_INET:
             {
                 struct sockaddr_in result_addr_in;
                 SlSockAddrIn_t *sl_addr_in = (SlSockAddrIn_t*)&sl_sockaddr;
 
-                result_addr_in.sin_family = sl_addr_in->sin_family;
+                result_addr_in.sin_family = AF_INET;
                 result_addr_in.sin_port = sl_addr_in->sin_port;
                 result_addr_in.sin_addr.s_addr = sl_addr_in->sin_addr.s_addr;
 
