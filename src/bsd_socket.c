@@ -471,7 +471,75 @@ int setsockopt(int s, int level, int option_name,
             }
             break;
     }
-                    
+
+    if (result < 0)
+    {
+        switch (result)
+        {
+            default:
+                errno = EINVAL;
+                break;
+        }
+        return -1;
+    }
+
+    return result;
+}
+
+/*
+ * ::getsockopt()
+ */
+int getsockopt(int socket, int level, int option_name,
+               void *option_value, socklen_t *option_len)
+{
+    int result;
+
+    switch (level)
+    {
+        default:
+            errno = EINVAL;
+            return -1;
+        case SOL_SOCKET:
+            level = SL_SOL_SOCKET;
+            switch (option_name)
+            {
+                default:
+                    errno = EINVAL;
+                    return -1;
+                case SO_REUSEADDR:
+                {
+                    /* CC32xx does not care about SO_REUSEADDR,
+                     * we assume it is on by default
+                     */
+                    int *so_reuseaddr = (int *)(option_value);
+                    *so_reuseaddr = 1;
+                    *option_len = sizeof(int);
+                    result = 0;
+                    break;
+                }
+            }
+            break;
+        case IPPROTO_TCP:
+            switch (option_name)
+            {
+                default:
+                    errno = EINVAL;
+                    return -1;
+                case TCP_NODELAY:
+                {
+                    /* CC32xx does not care about Nagel algorithm,
+                     * we assume it is off by default
+                     */
+                    int *tcp_nodelay = (int *)(option_value);
+                    *tcp_nodelay = 1;
+                    *option_len = sizeof(int);
+                    result = 0;
+                    break;
+                }
+            }
+            break;
+    }
+
     if (result < 0)
     {
         switch (result)
