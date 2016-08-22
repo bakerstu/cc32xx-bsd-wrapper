@@ -147,13 +147,13 @@ int bind(int s, const struct sockaddr *address, socklen_t address_len)
     switch (address->sa_family)
     {
         case AF_INET:
-        	sl_address.sa_family = SL_AF_INET;
+            sl_address.sa_family = SL_AF_INET;
             break;
         case AF_INET6:
-        	sl_address.sa_family = SL_AF_INET6;
+            sl_address.sa_family = SL_AF_INET6;
             break;
         case AF_PACKET:
-        	sl_address.sa_family = SL_AF_PACKET;
+            sl_address.sa_family = SL_AF_PACKET;
             break;
         default:
             errno = EAFNOSUPPORT;
@@ -327,7 +327,7 @@ int recvfrom(int s, void *buffer, size_t length, int flags,
              struct sockaddr *src_addr, socklen_t *addrlen)
 {
     SlSockAddr_t sl_sockaddr;
-    SlSocklen_t sl_addrlen = sizeof(SlSocklen_t);
+    SlSocklen_t sl_addrlen = sizeof(SlSockAddr_t);
 
     int result = sl_RecvFrom(s, buffer, length, flags, &sl_sockaddr,
                              &sl_addrlen);
@@ -341,17 +341,16 @@ int recvfrom(int s, void *buffer, size_t length, int flags,
                 return -1;
             case SL_AF_INET:
             {
-                struct sockaddr_in result_addr_in;
+                if (sizeof(struct sockaddr_in) < *addrlen)
+                {
+                    break;
+                }
+                struct sockaddr_in *addr_in = (struct sockaddr_in *)src_addr;
                 SlSockAddrIn_t *sl_addr_in = (SlSockAddrIn_t*)&sl_sockaddr;
 
-                result_addr_in.sin_family = AF_INET;
-                result_addr_in.sin_port = sl_addr_in->sin_port;
-                result_addr_in.sin_addr.s_addr = sl_addr_in->sin_addr.s_addr;
-
-                memcpy(src_addr, &result_addr_in,
-                       *addrlen < sizeof(struct sockaddr_in) ?
-                           *addrlen : sizeof(struct sockaddr_in));
-                *addrlen = sizeof(struct sockaddr_in);
+                addr_in->sin_family = AF_INET;
+                addr_in->sin_port = sl_addr_in->sin_port;
+                addr_in->sin_addr.s_addr = sl_addr_in->sin_addr.s_addr;
                 break;
             }
         }
