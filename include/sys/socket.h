@@ -158,6 +158,15 @@ struct timeval
 /** socket option to reuse address */
 #define SO_REUSEADDR (2)
 
+/** socket option to enable broadcasts */
+#define SO_BROADCAST (6)
+
+/** socket option to set the send window */
+#define SO_SNDBUF    (7)
+
+/** socket option to set the receive window */
+#define SO_RCVBUF    (8)
+
 /** IPv4 socket address */
 struct sockaddr
 {

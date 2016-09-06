@@ -456,6 +456,28 @@ int setsockopt(int s, int level, int option_name,
                     /* CC32xx does not care about SO_REUSEADDR, ignore it */
                     result = 0;
                     break;
+                case SO_BROADCAST:
+                    /* CC32xx does not care about SO_BROADCAST, ignore it */
+                    result = 0;
+                    break;
+                case SO_RCVBUF:
+                    if (option_len != sizeof (int))
+                    {
+                    	errno = EINVAL;
+                    	return -1;
+                    }
+                    else
+                    {
+						SlSockWinsize_t size;
+						size.WinSize = *((int *)option_value);
+						result = sl_SetSockOpt(s, SOL_SOCKET, SL_SO_RCVBUF,
+								               &size, sizeof(size));
+                    }
+                    break;
+                case SO_SNDBUF:
+                    /* CC32xx does not care about SO_SNDBUF, ignore it */
+                    result = 0;
+                    break;
             }
             break;
         case IPPROTO_TCP:
