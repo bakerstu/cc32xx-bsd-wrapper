@@ -66,7 +66,13 @@ struct sockaddr_in
 };
 
 /// Listen on all network interfaces for incoming connections.
-#define INADDR_ANY  (0)
+#define INADDR_ANY       (0x00000000)
+
+/** Broadcast IP address */
+#define INADDR_BROADCAST (0xFFFFFFFF)
+
+/** Loopback IP address */
+#define INADDR_LOOPBACK  (0x7F000001)
 
 /** TCP Raw Socket */
 #define IPPROTO_TCP (6)
