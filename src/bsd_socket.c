@@ -446,7 +446,6 @@ int setsockopt(int s, int level, int option_name,
             errno = EINVAL;
             return -1;
         case SOL_SOCKET:
-            level = SL_SOL_SOCKET;
             switch (option_name)
             {
                 default:
@@ -470,7 +469,7 @@ int setsockopt(int s, int level, int option_name,
                     {
 						SlSockWinsize_t size;
 						size.WinSize = *((int *)option_value);
-						result = sl_SetSockOpt(s, SOL_SOCKET, SL_SO_RCVBUF,
+						result = sl_SetSockOpt(s, SL_SOL_SOCKET, SL_SO_RCVBUF,
 								               &size, sizeof(size));
                     }
                     break;
