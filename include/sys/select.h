@@ -65,20 +65,32 @@ int select(int nfds, fd_set *readfds, fd_set *writefds,
 #ifdef FD_CLR
 #undef FD_CLR
 #endif
+#ifndef SL_FD_CLR
+#define SL_FD_CLR SL_SOCKET_FD_CLR
+#endif
 #define FD_CLR SL_FD_CLR
 
 #ifdef FD_ISSET
 #undef FD_ISSET
+#endif
+#ifndef SL_FD_ISSET
+#define SL_FD_ISSET SL_SOCKET_FD_ISSET
 #endif
 #define FD_ISSET SL_FD_ISSET
 
 #ifdef FD_SET
 #undef FD_SET
 #endif
+#ifndef SL_FD_SET
+#define SL_FD_SET SL_SOCKET_FD_SET
+#endif
 #define FD_SET SL_FD_SET
 
 #ifdef FD_ZERO
 #undef FD_ZERO
+#endif
+#ifndef SL_FD_ZERO
+#define SL_FD_ZERO SL_SOCKET_FD_ZERO
 #endif
 #define FD_ZERO SL_FD_ZERO
 
