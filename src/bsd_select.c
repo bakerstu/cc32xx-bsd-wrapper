@@ -48,10 +48,13 @@ int select(int nfds, fd_set *readfds, fd_set *writefds,
            fd_set *exceptfds, struct timeval *timeout)
 {
     SlTimeval_t tv;
-    tv.tv_sec = timeout->tv_sec;
-    tv.tv_usec = timeout->tv_usec;
+    if (timeout)
+    {
+        tv.tv_sec = timeout->tv_sec;
+        tv.tv_usec = timeout->tv_usec;
+    }
 
-    int16_t result = sl_Select(nfds, readfds, writefds, exceptfds, &tv);
+    int16_t result = sl_Select(nfds, readfds, writefds, exceptfds, timeout ? &tv : NULL);
 
     if (result < 0)
     {
