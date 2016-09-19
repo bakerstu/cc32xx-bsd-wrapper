@@ -462,15 +462,15 @@ int setsockopt(int s, int level, int option_name,
                 case SO_RCVBUF:
                     if (option_len != sizeof (int))
                     {
-                    	errno = EINVAL;
-                    	return -1;
+                        errno = EINVAL;
+                        return -1;
                     }
                     else
                     {
-						SlSockWinsize_t size;
-						size.WinSize = *((int *)option_value);
-						result = sl_SetSockOpt(s, SL_SOL_SOCKET, SL_SO_RCVBUF,
-								               &size, sizeof(size));
+                        SlSockWinsize_t size;
+                        size.WinSize = *((int *)option_value);
+                        result = sl_SetSockOpt(s, SL_SOL_SOCKET, SL_SO_RCVBUF,
+                                               &size, sizeof(size));
                     }
                     break;
                 case SO_SNDBUF:
